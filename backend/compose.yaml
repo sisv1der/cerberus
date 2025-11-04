@@ -1,9 +1,9 @@
 services:
   postgres:
     image: postgres:latest
-    container_name: nppk-postgres
+    container_name: cerberus-postgres
     environment:
-      POSTGRES_DB: nppk
+      POSTGRES_DB: cerberus
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -13,7 +13,7 @@ services:
 
   app:
     build: .
-    container_name: nppk-app
+    container_name: cerberus-app
     ports:
       - "8080:8080"
     depends_on:

@@ -15,6 +15,8 @@ import java.util.Set;
 @Table(name = "profiles")
 public class Profile {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "profiles_id_seq")
+    @SequenceGenerator(name = "profiles_id_seq", sequenceName = "profiles_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     @EqualsAndHashCode.Include
     @ToString.Include
@@ -35,13 +37,18 @@ public class Profile {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "absence_profile",
+            name = "absence_profiles",
             joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "absence_id")
     )
     private Set<Absence> absences = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
+
+    public void setUser(User user) {
+        this.user = user;
+        this.user.setProfile(this);
+    }
 }
