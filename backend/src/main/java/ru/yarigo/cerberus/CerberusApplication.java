@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class NppkBackendApplication {
+public class CerberusApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NppkBackendApplication.class, args);
+        SpringApplication.run(CerberusApplication.class, args);
     }
 
 }

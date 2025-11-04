@@ -15,6 +15,8 @@ import java.util.Set;
 @ToString(onlyExplicitlyIncluded = true)
 public class Permission {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permissions_id_seq")
+    @SequenceGenerator(name = "permissions_id_seq", sequenceName = "permissions_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     @EqualsAndHashCode.Include
     @ToString.Include

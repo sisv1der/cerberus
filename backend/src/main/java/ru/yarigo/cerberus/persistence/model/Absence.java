@@ -16,6 +16,8 @@ import java.util.Set;
 @Table(name = "absences")
 public class Absence {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "absences_id_seq")
+    @SequenceGenerator(name = "absences_id_seq", sequenceName = "absences_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     @EqualsAndHashCode.Include
     @ToString.Include

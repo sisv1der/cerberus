@@ -15,6 +15,8 @@ import java.util.Set;
 @Table(name = "groups")
 public class Group {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "groups_id_seq")
+    @SequenceGenerator(name = "groups_id_seq", sequenceName = "groups_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     @EqualsAndHashCode.Include
     @ToString.Include
