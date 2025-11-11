@@ -22,10 +22,10 @@ spring:
     enabled: true
 
   mail:
-    host: smtp.yandex.com
-    port: 465
-    username: test@example.com
-    password: test123
+    host: smtp.yandex.ru
+    port: 587
+    username: ${SMTP_LOGIN}@yandex.ru
+    password: ${SMTP_PASSWORD}
     properties:
       mail:
         smtp:
