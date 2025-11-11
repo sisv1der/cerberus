@@ -38,6 +38,10 @@ public class User {
     @ToString.Include
     private LocalDateTime createdAt;
 
+    @Column(name = "is_active", nullable = false)
+    @ToString.Include
+    private boolean isActive = true;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

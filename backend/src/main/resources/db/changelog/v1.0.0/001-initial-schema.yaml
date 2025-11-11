@@ -64,6 +64,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                   defaultValueComputed: "NOW()"
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+                  defaultValue: "true"
 
         # roles
         - createTable:
