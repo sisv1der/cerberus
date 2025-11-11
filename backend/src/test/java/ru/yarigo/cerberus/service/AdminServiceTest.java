@@ -30,6 +30,7 @@ class AdminServiceTest {
     private RoleRepository roleRepository;
     private ProfileRepository profileRepository;
     private PasswordEncoder passwordEncoder;
+    private EmailService emailService;
     private UserMapper userMapper;
 
     @BeforeEach
@@ -39,7 +40,8 @@ class AdminServiceTest {
         this.profileRepository = Mockito.mock(ProfileRepository.class);
         this.userMapper = Mockito.mock(UserMapper.class);
         this.passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        this.adminService = new AdminService(userRepository, roleRepository, profileRepository, passwordEncoder, userMapper);
+        this.emailService = Mockito.mock(EmailService.class);
+        this.adminService = new AdminService(userRepository, roleRepository, profileRepository, passwordEncoder, userMapper, emailService);
     }
 
     @Test
