@@ -3,10 +3,7 @@ package ru.yarigo.cerberus.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.yarigo.cerberus.service.AdminService;
 import ru.yarigo.cerberus.web.dto.RegisterRequest;
@@ -31,5 +28,10 @@ public class AdminController {
                 .toUri();
 
         return ResponseEntity.created(responseUri).body(response);
+    }
+
+    @DeleteMapping("/users/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        return ResponseEntity.noContent().build();
     }
 }

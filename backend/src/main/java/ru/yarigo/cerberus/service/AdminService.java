@@ -57,4 +57,13 @@ public class AdminService {
 
         return userMapper.userAndProfileToRegisterResponse(profile.getUser(), profile);
     }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            user.setActive(false);
+            userRepository.save(user);
+        }
+    }
 }
