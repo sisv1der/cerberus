@@ -1,5 +1,6 @@
 package ru.yarigo.cerberus.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -14,6 +15,7 @@ import ru.yarigo.cerberus.persistence.repository.RoleRepository;
 import ru.yarigo.cerberus.persistence.repository.UserRepository;
 import ru.yarigo.cerberus.web.dto.RegisterRequest;
 import ru.yarigo.cerberus.web.dto.RegisterResponse;
+import ru.yarigo.cerberus.web.dto.UserInfo;
 
 import java.util.Set;
 import java.util.UUID;
@@ -65,5 +67,13 @@ public class AdminService {
             user.setActive(false);
             userRepository.save(user);
         }
+    }
+
+    @Transactional
+    public UserInfo getUserInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        return userMapper.userAndProfileToUserInfo(user, user.getProfile());
     }
 }

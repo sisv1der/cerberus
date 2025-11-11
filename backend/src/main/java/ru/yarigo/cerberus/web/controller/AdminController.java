@@ -40,4 +40,10 @@ public class AdminController {
         adminService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> getUserInfo(@Min(1) @PathVariable Long id) {
+        return ResponseEntity.ok().body(adminService.getUserInfo(id));
+    }
 }
