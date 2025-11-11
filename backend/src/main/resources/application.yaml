@@ -24,7 +24,7 @@ spring:
   mail:
     host: smtp.yandex.ru
     port: 587
-    username: ${SMTP_LOGIN}@yandex.ru
+    username: ${SMTP_LOGIN}
     password: ${SMTP_PASSWORD}
     properties:
       mail:
@@ -32,6 +32,10 @@ spring:
           auth: true
           starttls:
             enable: true
+    protocol: smtp
+
+testing:
+  test_email: ${TEST_EMAIL}
 
 server:
   port: 8080
