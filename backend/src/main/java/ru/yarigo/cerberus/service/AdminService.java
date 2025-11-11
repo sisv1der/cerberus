@@ -1,5 +1,6 @@
 package ru.yarigo.cerberus.service;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class AdminService {
     private final EmailService emailService;
 
     @Transactional
-    public RegisterResponse registerUser(RegisterRequest request) throws BadRequestException {
+    public RegisterResponse registerUser(RegisterRequest request) throws BadRequestException, MessagingException {
         Set<Role> roles = Set.copyOf(roleRepository.findByNameIn(request.roles()));
         if (roles.size() != request.roles().size()) {
             throw new BadRequestException("One or more roles not found");
@@ -64,7 +65,7 @@ public class AdminService {
         return userMapper.userAndProfileToRegisterResponse(profile.getUser(), profile);
     }
 
-    private void sendCreationEmail(String fullName, String email, String username, String password, LocalDateTime registrationTime) {
+    private void sendCreationEmail(String fullName, String email, String username, String password, LocalDateTime registrationTime) throws MessagingException {
         final String SUBJECT = "Регистрация нового пользователя Cerberus";
         String body = generateRegistrationEmailBody(fullName, username, password, registrationTime);
 

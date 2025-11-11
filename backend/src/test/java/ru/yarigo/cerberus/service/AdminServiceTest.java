@@ -1,5 +1,6 @@
 package ru.yarigo.cerberus.service;
 
+import jakarta.mail.MessagingException;
 import org.apache.coyote.BadRequestException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +46,7 @@ class AdminServiceTest {
     }
 
     @Test
-    void registerUser_shouldCreateNewUser() throws BadRequestException {
+    void registerUser_shouldCreateNewUser() throws BadRequestException, MessagingException {
         var roles = List.of("ROLE_ADMIN", "ROLE_USER");
         var role1 = new Role();
         role1.setId(1L);
