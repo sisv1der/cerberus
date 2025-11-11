@@ -1,6 +1,6 @@
 spring:
   application:
-    name: NPPK-Backend
+    name: Cerberus
 
   datasource:
     url: jdbc:postgresql://localhost:5432/cerberus
@@ -45,3 +45,6 @@ logging:
     org.hibernate.SQL: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+jwt:
+  secret: dev-jwt-secret-key-for-token-generator
