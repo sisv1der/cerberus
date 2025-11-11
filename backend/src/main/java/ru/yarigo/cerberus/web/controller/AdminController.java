@@ -1,5 +1,6 @@
 package ru.yarigo.cerberus.web.controller;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +24,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping("/users")
-    public ResponseEntity<?> createUser(@Valid @NotNull @RequestBody RegisterRequest registerRequest) throws BadRequestException {
+    public ResponseEntity<?> createUser(@Valid @NotNull @RequestBody RegisterRequest registerRequest) throws BadRequestException, MessagingException {
         var response = adminService.registerUser(registerRequest);
 
         URI responseUri = ServletUriComponentsBuilder

@@ -1,5 +1,6 @@
 package ru.yarigo.cerberus.service;
 
+import jakarta.mail.MessagingException;
 import org.apache.coyote.BadRequestException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,7 @@ class AdminServiceTest {
     private RoleRepository roleRepository;
     private ProfileRepository profileRepository;
     private PasswordEncoder passwordEncoder;
+    private EmailService emailService;
     private UserMapper userMapper;
 
     @BeforeEach
@@ -39,11 +41,12 @@ class AdminServiceTest {
         this.profileRepository = Mockito.mock(ProfileRepository.class);
         this.userMapper = Mockito.mock(UserMapper.class);
         this.passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        this.adminService = new AdminService(userRepository, roleRepository, profileRepository, passwordEncoder, userMapper);
+        this.emailService = Mockito.mock(EmailService.class);
+        this.adminService = new AdminService(userRepository, roleRepository, profileRepository, passwordEncoder, userMapper, emailService);
     }
 
     @Test
-    void registerUser_shouldCreateNewUser() throws BadRequestException {
+    void registerUser_shouldCreateNewUser() throws BadRequestException, MessagingException {
         var roles = List.of("ROLE_ADMIN", "ROLE_USER");
         var role1 = new Role();
         role1.setId(1L);

@@ -28,7 +28,7 @@ public interface UserMapper {
             @Mapping(target = "username", source = "user.username"),
             @Mapping(target = "email", source = "user.email"),
             @Mapping(target = "fullName", source = "profile.fullName"),
-            @Mapping(target = "isActive", source = "user.isActive"),
+            @Mapping(target = "isActive", source = "user.active"),
             @Mapping(target = "createdAt", source = "user.createdAt")
     })
     UserInfo userAndProfileToUserInfo(User user, Profile profile);
