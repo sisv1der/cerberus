@@ -11,10 +11,8 @@ public record UserSecurity(User user) implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return user.getRoles().stream()
-                .flatMap(
-                        role -> role.getPermissions().stream()
-                ).map(
-                        permission -> new SimpleGrantedAuthority(permission.getCode())
+                .map(
+                        role -> new SimpleGrantedAuthority(role.getName())
                 ).toList();
     }
 

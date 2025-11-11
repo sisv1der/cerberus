@@ -3,6 +3,32 @@ databaseChangeLog:
       id: 001-1-create-tables
       author: IvanYarigo
       changes:
+        # sequences
+        - createSequence:
+            sequenceName: users_id_seq
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: roles_id_seq
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: profiles_id_seq
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: permissions_id_seq
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: groups_id_seq
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: absences_id_seq
+            startValue: 1
+            incrementBy: 1
+
 
         # users
         - createTable:
@@ -10,13 +36,20 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGSERIAL
+                  type: BIGINT
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: username
                   type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: varchar(320)
                   constraints:
                     nullable: false
                     unique: true
@@ -31,6 +64,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                   defaultValueComputed: "NOW()"
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+                  defaultValue: "true"
 
         # roles
         - createTable:
@@ -38,7 +77,8 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGSERIAL
+                  type: BIGINT
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -58,7 +98,8 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGSERIAL
+                  type: BIGINT
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -116,7 +157,8 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGSERIAL
+                  type: BIGINT
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -138,7 +180,8 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGSERIAL
+                  type: BIGINT
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -195,7 +238,8 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGSERIAL
+                  type: BIGINT
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false

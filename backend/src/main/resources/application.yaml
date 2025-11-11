@@ -1,9 +1,9 @@
 spring:
   application:
-    name: NPPK-Backend
+    name: Cerberus
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/nppk
+    url: jdbc:postgresql://localhost:5432/cerberus
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -45,3 +45,6 @@ logging:
     org.hibernate.SQL: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+jwt:
+  secret: dev-jwt-secret-key-for-token-generator

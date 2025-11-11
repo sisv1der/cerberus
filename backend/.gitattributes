@@ -1,0 +1,14 @@
+# Текстовые файлы и конфиги
+/gradlew text eol=lf
+*.bat text eol=crlf
+
+# Бинарные файлы
+*.png binary
+*.jpg binary
+*.ico binary
+*.exe binary
+*.dll binary
+*.jar binary
+
+# Документы
+docs/* text
