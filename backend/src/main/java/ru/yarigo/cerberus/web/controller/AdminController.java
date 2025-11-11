@@ -1,8 +1,12 @@
 package ru.yarigo.cerberus.web.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.yarigo.cerberus.service.AdminService;
@@ -13,12 +17,13 @@ import java.net.URI;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
+@Validated
 public class AdminController {
 
     private final AdminService adminService;
 
     @PostMapping("/users")
-    public ResponseEntity<?> createUser(@RequestBody RegisterRequest registerRequest) throws BadRequestException {
+    public ResponseEntity<?> createUser(@Valid @NotNull @RequestBody RegisterRequest registerRequest) throws BadRequestException {
         var response = adminService.registerUser(registerRequest);
 
         URI responseUri = ServletUriComponentsBuilder
@@ -31,7 +36,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@Min(1) @PathVariable Long id) {
+        adminService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 }
