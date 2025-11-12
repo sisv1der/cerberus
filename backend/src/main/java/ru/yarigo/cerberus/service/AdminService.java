@@ -1,6 +1,7 @@
 package ru.yarigo.cerberus.service;
 
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -35,14 +36,14 @@ public class AdminService {
     private final EmailService emailService;
 
     @Transactional
-    public RegisterResponse registerUser(RegisterRequest request) throws BadRequestException, MessagingException {
+    public RegisterResponse registerUser(RegisterRequest request) throws BadRequestException, EntityExistsException, MessagingException {
         Set<Role> roles = Set.copyOf(roleRepository.findByNameIn(request.roles()));
         if (roles.size() != request.roles().size()) {
             throw new BadRequestException("One or more roles not found");
         }
 
         if (userRepository.findByUsername(request.username()).isPresent()) {
-            throw new BadRequestException("Login already in use");
+            throw new EntityExistsException("Login already in use");
         }
 
         String password = UUID.randomUUID().toString();
@@ -108,7 +109,7 @@ public class AdminService {
     }
 
     @Transactional
-    public UserInfo getUserInfo(Long userId) {
+    public UserInfo getUserInfo(Long userId) throws EntityNotFoundException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 

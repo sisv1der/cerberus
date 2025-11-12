@@ -18,7 +18,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    public LoginResponse authenticate(LoginRequest loginRequest) throws JOSEException {
+    public LoginResponse authenticate(LoginRequest loginRequest) throws JOSEException, BadCredentialsException {
         var user = userService.findByUsername(loginRequest.username());
 
         if (!passwordEncoder.matches(loginRequest.password(), user.getPasswordHash())) {

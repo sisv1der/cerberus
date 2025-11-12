@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @NotNull @RequestBody LoginRequest loginRequest) throws JOSEException {
+    public ResponseEntity<?> login(@Valid @NotNull @RequestBody LoginRequest loginRequest) throws JOSEException, BadCredentialsException {
         return ResponseEntity.ok(authService.authenticate(loginRequest));
     }
 }
