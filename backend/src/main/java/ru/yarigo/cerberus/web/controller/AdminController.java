@@ -1,6 +1,8 @@
 package ru.yarigo.cerberus.web.controller;
 
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +26,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping("/users")
-    public ResponseEntity<?> createUser(@Valid @NotNull @RequestBody RegisterRequest registerRequest) throws BadRequestException, MessagingException {
+    public ResponseEntity<?> createUser(@Valid @NotNull @RequestBody RegisterRequest registerRequest) throws BadRequestException, MessagingException, EntityExistsException {
         var response = adminService.registerUser(registerRequest);
 
         URI responseUri = ServletUriComponentsBuilder
@@ -44,7 +46,7 @@ public class AdminController {
 
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<?> getUserInfo(@Min(1) @PathVariable Long id) {
+    public ResponseEntity<?> getUserInfo(@Min(1) @PathVariable Long id) throws EntityNotFoundException {
         return ResponseEntity.ok().body(adminService.getUserInfo(id));
     }
 }
