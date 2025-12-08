@@ -7,13 +7,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.yarigo.cerberus.admin.dto.UserRegistered;
+import ru.yarigo.cerberus.infrastructure.notification.EmailNotificationService;
 import ru.yarigo.cerberus.users.user.service.UserService;
 import ru.yarigo.cerberus.users.user.web.dto.UserMapper;
 import ru.yarigo.cerberus.users.profiles.model.Profile;
 import ru.yarigo.cerberus.users.roles.model.Role;
 import ru.yarigo.cerberus.users.user.model.User;
 import ru.yarigo.cerberus.admin.service.AdminService;
-import ru.yarigo.cerberus.infrastructure.smtp.EmailService;
 import ru.yarigo.cerberus.admin.web.dto.RegisterRequest;
 import ru.yarigo.cerberus.admin.web.dto.RegisterResponse;
 
@@ -32,7 +32,7 @@ class AdminServiceTest {
     void setUp() {
         this.userService = Mockito.mock(UserService.class);
         this.userMapper = Mockito.mock(UserMapper.class);
-        EmailService emailService = Mockito.mock(EmailService.class);
+        EmailNotificationService emailService = Mockito.mock(EmailNotificationService.class);
         this.adminService = new AdminService(userService, userMapper, emailService);
     }
 
