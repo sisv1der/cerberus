@@ -6,45 +6,34 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.yarigo.cerberus.admin.dto.UserRegistered;
+import ru.yarigo.cerberus.users.user.service.UserService;
 import ru.yarigo.cerberus.users.user.web.dto.UserMapper;
 import ru.yarigo.cerberus.users.profiles.model.Profile;
 import ru.yarigo.cerberus.users.roles.model.Role;
 import ru.yarigo.cerberus.users.user.model.User;
-import ru.yarigo.cerberus.users.profiles.model.ProfileRepository;
-import ru.yarigo.cerberus.users.roles.model.RoleRepository;
-import ru.yarigo.cerberus.users.user.model.UserRepository;
 import ru.yarigo.cerberus.admin.service.AdminService;
 import ru.yarigo.cerberus.infrastructure.smtp.EmailService;
 import ru.yarigo.cerberus.admin.web.dto.RegisterRequest;
 import ru.yarigo.cerberus.admin.web.dto.RegisterResponse;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 
 class AdminServiceTest {
 
     private AdminService adminService;
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private ProfileRepository profileRepository;
-    private PasswordEncoder passwordEncoder;
-    private EmailService emailService;
     private UserMapper userMapper;
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
-        this.userRepository = Mockito.mock(UserRepository.class);
-        this.roleRepository = Mockito.mock(RoleRepository.class);
-        this.profileRepository = Mockito.mock(ProfileRepository.class);
+        this.userService = Mockito.mock(UserService.class);
         this.userMapper = Mockito.mock(UserMapper.class);
-        this.passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        this.emailService = Mockito.mock(EmailService.class);
-        this.adminService = new AdminService(userRepository, roleRepository, profileRepository, passwordEncoder, userMapper, emailService);
+        EmailService emailService = Mockito.mock(EmailService.class);
+        this.adminService = new AdminService(userService, userMapper, emailService);
     }
 
     @Test
@@ -63,7 +52,7 @@ class AdminServiceTest {
                 .email("email")
                 .username("username")
                 .roles(Set.of(role1, role2))
-                .passwordHash(passwordEncoder.encode(UUID.randomUUID().toString()))
+                .passwordHash("password")
                 .build();
         expectedUser.setId(1L);
 
@@ -82,19 +71,13 @@ class AdminServiceTest {
                 expectedProfile.getFullName()
         );
 
-        Mockito.when(roleRepository.findByNameIn(roles))
-                .thenReturn(expectedRoles);
-        Mockito.when(userRepository.findByUsername(request.username()))
-                .thenReturn(Optional.empty());
-        Mockito.when(profileRepository.save(any()))
-                .thenReturn(expectedProfile);
+        Mockito.when(userService.createUser(any(), any()))
+                        .thenReturn(new UserRegistered(expectedUser, expectedProfile));
+
         Mockito.when(userMapper.userAndProfileToRegisterResponse(any(), any()))
                 .thenReturn(expectedResponse);
 
         var result = adminService.registerUser(request);
         Assertions.assertThat(result.username()).isEqualTo(request.username());
-
-        Mockito.verify(profileRepository, Mockito.times(1))
-                .save(any());
     }
 }

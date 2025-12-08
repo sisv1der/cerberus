@@ -6,22 +6,18 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.yarigo.cerberus.infrastructure.smtp.EmailService;
-import ru.yarigo.cerberus.users.user.web.dto.UserMapper;
-import ru.yarigo.cerberus.users.profiles.model.Profile;
-import ru.yarigo.cerberus.users.roles.model.Role;
-import ru.yarigo.cerberus.users.user.model.User;
-import ru.yarigo.cerberus.users.profiles.model.ProfileRepository;
-import ru.yarigo.cerberus.users.roles.model.RoleRepository;
-import ru.yarigo.cerberus.users.user.model.UserRepository;
+import ru.yarigo.cerberus.admin.dto.UserRegistered;
 import ru.yarigo.cerberus.admin.web.dto.RegisterRequest;
 import ru.yarigo.cerberus.admin.web.dto.RegisterResponse;
+import ru.yarigo.cerberus.infrastructure.smtp.EmailService;
+import ru.yarigo.cerberus.users.profiles.model.Profile;
+import ru.yarigo.cerberus.users.user.model.User;
+import ru.yarigo.cerberus.users.user.service.UserService;
 import ru.yarigo.cerberus.users.user.web.dto.UserInfo;
+import ru.yarigo.cerberus.users.user.web.dto.UserMapper;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -29,42 +25,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final ProfileRepository profileRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
     private final UserMapper userMapper;
     private final EmailService emailService;
 
     @Transactional
     public RegisterResponse registerUser(RegisterRequest request) throws BadRequestException, EntityExistsException, MessagingException {
-        Set<Role> roles = Set.copyOf(roleRepository.findByNameIn(request.roles()));
-        if (roles.size() != request.roles().size()) {
-            throw new BadRequestException("One or more roles not found");
-        }
-
-        if (userRepository.findByUsername(request.username()).isPresent()) {
-            throw new EntityExistsException("Login already in use");
-        }
-
         String password = UUID.randomUUID().toString();
-
-        User user = User.builder()
-                .username(request.username())
-                .email(request.email())
-                .passwordHash(passwordEncoder.encode(password))
-                .roles(roles)
-                .build();
-
-        Profile profile = new Profile();
-        profile.setFullName(request.fullName());
-
-        profile.setUser(user);
-        profile = profileRepository.save(profile);
+        UserRegistered userRegistered = userService.createUser(request, password);
+        User user = userRegistered.user();
+        Profile profile = userRegistered.profile();
 
         sendCreationEmail(profile.getFullName(), user.getEmail(), user.getUsername(), password, user.getCreatedAt());
 
-        return userMapper.userAndProfileToRegisterResponse(profile.getUser(), profile);
+        return userMapper.userAndProfileToRegisterResponse(user, profile);
     }
 
     private void sendCreationEmail(String fullName, String email, String username, String password, LocalDateTime registrationTime) throws MessagingException {
@@ -102,16 +76,12 @@ public class AdminService {
 
     @Transactional
     public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user != null) {
-            user.setActive(false);
-            userRepository.save(user);
-        }
+        userService.deleteById(userId);
     }
 
     @Transactional
     public UserInfo getUserInfo(Long userId) throws EntityNotFoundException {
-        User user = userRepository.findById(userId)
+        User user = userService.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         return userMapper.userAndProfileToUserInfo(user, user.getProfile());

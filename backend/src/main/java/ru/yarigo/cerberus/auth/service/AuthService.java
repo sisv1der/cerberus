@@ -1,6 +1,7 @@
 package ru.yarigo.cerberus.auth.service;
 
 import com.nimbusds.jose.JOSEException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,8 +20,9 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    public LoginResponse authenticate(LoginRequest loginRequest) throws JOSEException, BadCredentialsException {
-        var user = userService.findByUsername(loginRequest.username());
+    public LoginResponse authenticate(LoginRequest loginRequest) throws JOSEException, BadCredentialsException, EntityNotFoundException {
+        var user = userService.findByUsername(loginRequest.username())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(loginRequest.password(), user.getPasswordHash())) {
             throw new BadCredentialsException("Invalid username or password");
