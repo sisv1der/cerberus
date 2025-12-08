@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
 import ru.yarigo.cerberus.TestcontainersConfiguration;
+import ru.yarigo.cerberus.infrastructure.smtp.EmailService;
 
 import java.time.LocalDateTime;
 
